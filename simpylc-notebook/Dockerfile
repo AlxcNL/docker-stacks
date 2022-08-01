@@ -35,13 +35,14 @@ RUN apt-get update \
 && apt-get install -y -qq --no-install-recommends \
     featherpad \   
     freeglut3-dev \
-    libnuma-dev \
-    libxext6 \
-    libx11-6 \
-    libglvnd0 \
-    libgl1 \
-    libglx0 \
     libegl1 \
+    libgl1 \
+    libgl1-mesa-dri \
+    libglvnd0 \
+    libglx0 \
+    libnuma-dev \
+    libx11-6 \
+    libxext6 \
     lxtask \
     xterm \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -55,42 +56,21 @@ USER ${NB_UID}
 # Install Python 3 packages
 RUN mamba install --quiet --yes \
     # https://pillow.readthedocs.io
-    # 'altair' \
-    # 'beautifulsoup4' \
-    # 'bokeh' \
-    # 'bottleneck' \
-    # 'cloudpickle' \
-    # 'conda-forge::blas=*=openblas' \
-    # 'cython' \
-    # 'dask' \
-    # 'dill' \
-    # 'git' \
-    # 'h5py' \
-    # 'ipympl'\
-    # 'ipywidgets' \
+    'beautifulsoup4' \
+    'conda-forge::blas=*=openblas' \
     # lidar is a Python package for delineating the nested hierarchy 
     # of surface depressions in digital elevation models 
     'lidar' \
     'matplotlib-base' \
-    # 'numba' \
     'numpy' \
-    # 'numexpr' \
-    # 'pandas' \
-    # 'patsy' \
-    # 'protobuf' \
+    'pandas' \
     'pyopengl' \
-    # 'pytables' \
-    # 'scikit-image' \
-    # 'scikit-learn' \
-    # 'scipy' \
-    # 'simpy' \
-    # 'selenium' \
-    # 'seaborn' \
-    # 'sqlalchemy' \
-    # 'statsmodels' \
-    # 'sympy' \
+    'pytables' \
+    'scikit-image' \
+    'scikit-learn' \
+    'selenium' \
     'tensorflow' \
-    # 'widgetsnbextension'\
+    'widgetsnbextension'\
     'xlrd' && \
     mamba clean --all -f -y && \
     fix-permissions "${CONDA_DIR}" && \

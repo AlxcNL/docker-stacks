@@ -5,6 +5,7 @@
 # Use bash for inline if-statements in arch_patch target
 SHELL:=bash
 OWNER?=jupyter
+NB_USER?=jovyan
 
 # Need to list the images in build dependency order
 # All of the images
@@ -13,6 +14,7 @@ ALL_IMAGES:= \
 	minimal-notebook \
 	r-notebook \
 	scipy-notebook \
+	simpylc-notebook \
 	tensorflow-notebook \
 	datascience-notebook \
 	pyspark-notebook \
@@ -44,7 +46,8 @@ help:
 
 build/%: DOCKER_BUILD_ARGS?=
 build/%: ## build the latest image for a stack using the system's architecture
-	docker build $(DOCKER_BUILD_ARGS) --rm --force-rm -t $(OWNER)/$(notdir $@):latest ./$(notdir $@) --build-arg OWNER=$(OWNER)
+	docker build $(DOCKER_BUILD_ARGS) --rm --force-rm -t $(OWNER)/$(notdir $@):latest ./$(notdir $@) \
+	--build-arg OWNER=$(OWNER) --build-arg NB_USER=$(NB_USER)
 	@echo -n "Built image size: "
 	@docker images $(OWNER)/$(notdir $@):latest --format "{{.Size}}"
 build-all: $(foreach I, $(ALL_IMAGES), build/$(I)) ## build all stacks

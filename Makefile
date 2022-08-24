@@ -6,6 +6,7 @@
 SHELL:=bash
 OWNER?=jupyter
 NB_USER?=jovyan
+ROOT_CONTAINER?=ubuntu:22.04
 
 # Need to list the images in build dependency order
 # All of the images
@@ -47,7 +48,7 @@ help:
 build/%: DOCKER_BUILD_ARGS?=
 build/%: ## build the latest image for a stack using the system's architecture
 	docker build $(DOCKER_BUILD_ARGS) --rm --force-rm -t $(OWNER)/$(notdir $@):latest ./$(notdir $@) \
-	--build-arg OWNER=$(OWNER) --build-arg NB_USER=$(NB_USER)
+	--build-arg OWNER=$(OWNER) --build-arg NB_USER=$(NB_USER) --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}
 	@echo -n "Built image size: "
 	@docker images $(OWNER)/$(notdir $@):latest --format "{{.Size}}"
 build-all: $(foreach I, $(ALL_IMAGES), build/$(I)) ## build all stacks

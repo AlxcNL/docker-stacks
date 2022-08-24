@@ -1,9 +1,8 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-# Ubuntu 22.04 (jammy)
-# https://hub.docker.com/_/ubuntu/?tab=tags&name=jammy
-ARG ROOT_CONTAINER=ubuntu:22.04
+# ARG ROOT_CONTAINER=ubuntu:22.04
+ARG ROOT_CONTAINER==jlesage/baseimage:debian-11-v2.4.6
 
 FROM $ROOT_CONTAINER
 
@@ -38,7 +37,7 @@ RUN apt-get update --yes && \
     # - run-one - a wrapper script that runs no more
     #   than one unique  instance  of  some  command with a unique set of arguments,
     #   we use `run-one-constantly` to support `RESTARTABLE` option
-    run-one \
+    # run-one \
     sudo \
     # - tini is installed as a helpful container entrypoint that reaps zombie
     #   processes and such of the actual executable we want to start, see
@@ -123,10 +122,11 @@ RUN set -x && \
         --prefix="${CONDA_DIR}" \
         --yes \
         "${PYTHON_SPECIFIER}" \
-        'mamba' \
-        'notebook' \
         'jupyterhub' \
-        'jupyterlab' && \
+        'jupyterlab' \
+        'jupyterthemes'\
+        'mamba' \
+        'notebook' && \
     rm micromamba && \
     # Pin major.minor version of python
     mamba list python | grep '^python ' | tr -s ' ' | cut -d ' ' -f 1,2 >> "${CONDA_DIR}/conda-meta/pinned" && \

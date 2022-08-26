@@ -1,10 +1,11 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 
-# ARG ROOT_CONTAINER=ubuntu:22.04
-ARG ROOT_CONTAINER==jlesage/baseimage:debian-11-v2.4.6
+ARG OWNER=jupyter
+ARG ROOT_CONTAINER
+ARG BASE_CONTAINER=${ROOT_CONTAINER}
 
-FROM $ROOT_CONTAINER
+FROM $BASE_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 ARG NB_USER="student"
@@ -19,8 +20,6 @@ USER root
 
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
-ENV DEBIAN_FRONTEND noninteractive
-
 RUN apt-get update --yes && \
     # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
     #   the ubuntu base image is rebuilt too seldom sometimes (less than once a month)
@@ -67,8 +66,8 @@ RUN chmod a+rx /usr/local/bin/fix-permissions
 # Enable prompt color in the skeleton .bashrc before creating the default NB_USER
 # hadolint ignore=SC2016
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc && \
-   # Add call to conda init script see https://stackoverflow.com/a/58081608/4413446
-   echo 'eval "$(command conda shell.bash hook 2> /dev/null)"' >> /etc/skel/.bashrc
+    # Add call to conda init script see https://stackoverflow.com/a/58081608/4413446
+    echo 'eval "$(command conda shell.bash hook 2> /dev/null)"' >> /etc/skel/.bashrc
 
 # Create NB_USER with name student user with UID=1000 and in the 'users' group
 # and make sure these dirs are writable by the `users` group.
@@ -107,26 +106,26 @@ WORKDIR /tmp
 RUN set -x && \
     arch=$(uname -m) && \
     if [ "${arch}" = "x86_64" ]; then \
-        # Should be simpler, see <https://github.com/mamba-org/mamba/issues/1437>
-        arch="64"; \
+    # Should be simpler, see <https://github.com/mamba-org/mamba/issues/1437>
+    arch="64"; \
     fi && \
     wget -qO /tmp/micromamba.tar.bz2 \
-        "https://micromamba.snakepit.net/api/micromamba/linux-${arch}/latest" && \
+    "https://micromamba.snakepit.net/api/micromamba/linux-${arch}/latest" && \
     tar -xvjf /tmp/micromamba.tar.bz2 --strip-components=1 bin/micromamba && \
     rm /tmp/micromamba.tar.bz2 && \
     PYTHON_SPECIFIER="python=${PYTHON_VERSION}" && \
     if [[ "${PYTHON_VERSION}" == "default" ]]; then PYTHON_SPECIFIER="python"; fi && \
     # Install the packages
     ./micromamba install \
-        --root-prefix="${CONDA_DIR}" \
-        --prefix="${CONDA_DIR}" \
-        --yes \
-        "${PYTHON_SPECIFIER}" \
-        'jupyterhub' \
-        'jupyterlab' \
-        'jupyterthemes'\
-        'mamba' \
-        'notebook' && \
+    --root-prefix="${CONDA_DIR}" \
+    --prefix="${CONDA_DIR}" \
+    --yes \
+    "${PYTHON_SPECIFIER}" \
+    'jupyterhub' \
+    'jupyterlab' \
+    'jupyterthemes'\
+    'mamba' \
+    'notebook' && \
     rm micromamba && \
     # Pin major.minor version of python
     mamba list python | grep '^python ' | tr -s ' ' | cut -d ' ' -f 1,2 >> "${CONDA_DIR}/conda-meta/pinned" && \

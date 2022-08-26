@@ -2,10 +2,10 @@
 
 owner="jaboo"
 
-version="1.0-debian-slim"
-rootContainer="debian:bullseye-slim"
+version="1.0-ubuntu"
+rootContainer="ubuntu:22.04"
 
-notebooks=("base-notebook" "simpylc-notebook")
+notebooks=("base-notebook" "simpylc-notebook" "miw-notebook")
 
 for notebook in "${notebooks[@]}"
 do
@@ -16,12 +16,12 @@ do
     imageName="${owner}/${notebook}"
     imageTag="${imageName}:${version}"
     
-    printf "Add tags %s and debian to %s\n" "${imageTag}" "${imageName}"
+    printf "Add tags %s to %s\n" "${imageTag}" "${imageName}"
     tag_cmd1="docker tag ${imageName} ${imageTag}"
     echo ${tag_cmd1}
     eval ${tag_cmd1}
 
-    tag_cmd2="docker tag ${imageName} debian" 
+    tag_cmd2="docker tag ${imageName} " 
     echo ${tag_cmd2}
     eval ${tag_cmd2}
 

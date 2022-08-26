@@ -13,6 +13,7 @@ ROOT_CONTAINER?=ubuntu:22.04
 ALL_IMAGES:= \
 	base-notebook \
 	minimal-notebook \
+	miw-notebook \
 	r-notebook \
 	scipy-notebook \
 	simpylc-notebook \

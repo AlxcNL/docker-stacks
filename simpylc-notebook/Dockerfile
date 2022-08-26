@@ -36,9 +36,11 @@ RUN apt-get update && \
     freeglut3-dev \
     libegl1 \
     libgl1 \
+    libgl1-mesa-dev \
     libgl1-mesa-dri \
     libgl1-mesa-glx \
     libglvnd0 \
+    libglvnd-dev \
     libglx0 \
     libjpeg62 \
     libnuma-dev \
@@ -48,6 +50,7 @@ RUN apt-get update && \
     libxext6 \
     # LXTask is a GUI application for LXDE
     lxtask \
+    x11-apps \
     x11-apps \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -105,10 +108,10 @@ ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
 
 # Enable GUI
-# ENV DISPLAY=host.docker.internal:0.0
-ENV DISPLAY=:0 \
-    DISPLAY_WIDTH=1280 \
-    DISPLAY_HEIGHT=768
+ENV DISPLAY=host.docker.internal:0.0
+# ENV DISPLAY=:0 \
+#     DISPLAY_WIDTH=1280 \
+#     DISPLAY_HEIGHT=768
 
 # print to stdout without buffering
 ENV PYTHONUNBUFFERED=1 

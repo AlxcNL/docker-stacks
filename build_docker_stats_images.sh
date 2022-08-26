@@ -2,8 +2,9 @@
 
 owner="jaboo"
 
-version="1.0-debian"
-rootContainer="jlesage/baseimage:debian-11-v2.4.6"
+version="1.0-debian-slim"
+rootContainer="debian:bullseye-slim"
+
 notebooks=("base-notebook" "simpylc-notebook")
 
 for notebook in "${notebooks[@]}"

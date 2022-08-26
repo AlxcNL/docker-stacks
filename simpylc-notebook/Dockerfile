@@ -3,6 +3,7 @@
 ARG OWNER=jupyter
 ARG ROOT_CONTAINER
 ARG BASE_CONTAINER=${ROOT_CONTAINER}
+
 FROM $BASE_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
@@ -30,8 +31,8 @@ RUN apt-get update --yes && \
 
 # Dependencies for glvnd and X11.
 # https://medium.com/@benjamin.botto/opengl-and-cuda-applications-in-docker-af0eece000f1
-RUN apt-get update \
-&& apt-get install -y -qq --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y -qq \
     freeglut3-dev \
     libegl1 \
     libgl1 \
@@ -39,12 +40,15 @@ RUN apt-get update \
     libgl1-mesa-glx \
     libglvnd0 \
     libglx0 \
+    libjpeg62 \
     libnuma-dev \
     libx11-6 \
+    # python-imaging \
     #  libXext provides an X Window System client interface
     libxext6 \
     # LXTask is a GUI application for LXDE
     lxtask \
+    x11-apps \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Env vars for the nvidia-container-runtime.
@@ -56,13 +60,16 @@ USER ${NB_UID}
 # Install Python 3 packages
 RUN mamba install --yes \
     'beautifulsoup4' \
+    'black' \
     'conda-forge::blas=*=openblas' \
     # lidar is a Python package for delineating the nested hierarchy 
     # of surface depressions in digital elevation models 
+    'ipython' \
     'lidar' \
     'matplotlib-base' \
     'numpy' \
     'pandas' \
+    'pylint' \
     'pyopengl' \
     'pytables' \
     'scikit-image' \
@@ -85,7 +92,7 @@ USER ${NB_USER}
 
 # Genereate simpylc examples
 # https://pypi.org/project/SimPyLC/
-RUN python -m pip install simpylc && \
+RUN python -m pip install SimPyLC --ignore-installed --no-cache-dir --upgrade && \
     python -m simpylc -s
 
 # Expose Jupyter port

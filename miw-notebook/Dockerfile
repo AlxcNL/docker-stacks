@@ -16,6 +16,11 @@ LABEL MAINTAINER="Jeroen Boogaard <j.a.boogaard@hr.nl>"
 COPY requirements.txt .
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
+RUN mkdir ${HOME}/ptpython
+COPY config.py ${HOME}/ptpython/
+# COPY interactive_startup_file.py ${HOME}/ptpython/
+# ENV PYTHONSTARTUP="${HOME}/ptpython/interactive_startup_file.py"
+
 # Copy custom scripts
 COPY run_script.sh /usr/local/bin/run_script
 
@@ -26,13 +31,6 @@ RUN mkdir -p /home/student/notebooks \
     && mkdir -p /home/student/projects \
     && mkdir -p /home/student/scripts
 
-WORKDIR /home/${NB_USER}
-
 # ptipython
 
-# RUN mkdir ${HOME}/ptpython
-
-# COPY config.py ${HOME}/ptpython/
-# COPY interactive_startup_file.py ${HOME}/ptpython/
-
-# ENV PYTHONSTARTUP="${HOME}/ptpython/interactive_startup_file.py"
+WORKDIR /home/${NB_USER}

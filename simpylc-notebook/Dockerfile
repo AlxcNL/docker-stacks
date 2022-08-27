@@ -26,13 +26,17 @@ RUN apt-get update --yes && \
     software-properties-common \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# # PPA third-party repository for Open Source AMD Radeon Drivers 
+# # PPA third-party repository for Open Source AMD Radeon Drivers
 # RUN add-apt-repository ppa:oibaf/graphics-drivers
 
 # Dependencies for glvnd and X11.
 # https://medium.com/@benjamin.botto/opengl-and-cuda-applications-in-docker-af0eece000f1
 RUN apt-get update && \
     apt-get install -y -qq \
+    pcmanfm \
+    featherpad \
+    lxtask \
+    xterm \
     freeglut3-dev \
     libegl1 \
     libgl1 \
@@ -65,8 +69,8 @@ RUN mamba install --yes \
     'beautifulsoup4' \
     'black' \
     'conda-forge::blas=*=openblas' \
-    # lidar is a Python package for delineating the nested hierarchy 
-    # of surface depressions in digital elevation models 
+    # lidar is a Python package for delineating the nested hierarchy
+    # of surface depressions in digital elevation models
     'ipython' \
     'lidar' \
     'matplotlib-base' \
@@ -78,7 +82,7 @@ RUN mamba install --yes \
     'scikit-image' \
     'scikit-learn' \
     'selenium' \
-    'tensorflow' \
+    # 'tensorflow' \
     'widgetsnbextension'\
     'xlrd' && \
     mamba clean --all -f -y && \
@@ -114,7 +118,9 @@ ENV DISPLAY=host.docker.internal:0.0
 #     DISPLAY_HEIGHT=768
 
 # print to stdout without buffering
-ENV PYTHONUNBUFFERED=1 
+ENV PYTHONUNBUFFERED=1
 
 # don't generate *.pyc files
 ENV PYTHONDONTWRITEBYTECODE=1
+
+# ENTRYPOINT pcmanfm
